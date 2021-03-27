@@ -1,4 +1,24 @@
-<!doctype html>
+<?php
+define("DATA_FILE", "latest.json");
+define("DATE_FORMAT", "F jS, Y");
+
+if (!file_exists(DATA_FILE)) {
+    http_response_code(500);
+    exit("500: data file not found");
+}
+
+$json_txt = file_get_contents(DATA_FILE);
+$json = json_decode($json_txt, true);
+
+$prediction_price = number_format($json['predicted_price']);
+$prediction_price_round = number_format($json['predicted_price_dev']);
+
+$prediction_date_timestamp = $json['current_date'] + $json['predicted_date'] * 3600 * 24;
+$prediction_date = date(DATE_FORMAT, $prediction_date_timestamp);
+$prediction_date_round = $json['predicted_date_dev'];
+
+$prediction_generated_one = date(DATE_FORMAT, $json['current_date']);
+?><!doctype html>
 <html lang="en">
     <head>
         <meta charset="utf-8">
@@ -42,9 +62,9 @@
         <div class="container-fluid">
         <div class="prediction">
             <p class="prediction-title">The top of the current BTC bull run will happen on:</p>
-            <h1 class="prediction-price">$126,245<wbr><span class="prediction-price-round">±$35,521</span></h1>
-            <h2 class="prediction-date"><nobr>October 24th, 2021</nobr><wbr><span class="prediction-date-round">±3 day(s)</span></h2>
-            <p class="prediction-generated-on">This prediction was made on <nobr>March 26th, 2021</nobr></p>
+            <h1 class="prediction-price">$<?=$prediction_price?><wbr><span class="prediction-price-round">±$<?=$prediction_price_round?></span></h1>
+            <h2 class="prediction-date"><nobr><?=$prediction_date?></nobr><wbr><span class="prediction-date-round">±<?=$prediction_date_round?> day(s)</span></h2>
+            <p class="prediction-generated-on">This prediction was made on <nobr><?=$prediction_generated_one?></nobr></p>
             <p class="prediction-learn-more"><a href="#">Click here to learn more</a> 😎</p>
         </div>
         </div>
