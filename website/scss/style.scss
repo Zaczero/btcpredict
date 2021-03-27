@@ -1,0 +1,207 @@
+/*!
+ * Bootstrap v4.6.0 (https://getbootstrap.com/)
+ * Copyright 2011-2021 The Bootstrap Authors
+ * Copyright 2011-2021 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
+ */
+
+@import "functions";
+@import "variables";
+@import "mixins";
+@import "root";
+@import "reboot";
+@import "type";
+@import "images";
+@import "code";
+@import "grid";
+@import "tables";
+@import "forms";
+@import "buttons";
+@import "transitions";
+@import "dropdown";
+@import "button-group";
+@import "input-group";
+@import "custom-forms";
+@import "nav";
+@import "navbar";
+@import "card";
+@import "breadcrumb";
+@import "pagination";
+@import "badge";
+@import "jumbotron";
+@import "alert";
+@import "progress";
+@import "media";
+@import "list-group";
+@import "close";
+@import "toasts";
+@import "modal";
+@import "tooltip";
+@import "popover";
+@import "carousel";
+@import "spinners";
+@import "utilities";
+@import "print"; 
+
+@font-face {
+    font-family: 'Rubik';
+    src: url('/font/Rubik-VariableFont_wght.ttf');
+}
+
+html, body {
+    font-family: 'Rubik';
+    min-height: 100vh;
+
+    background-color: #ffffff;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2000 1500'%3E%3Cpattern id='p' width='2000' height='1000' patternUnits='userSpaceOnUse' patternTransform='scale(0.05) translate(19000 14250)'%3E%3Cpath fill='%23fafafa' d='M1500 100l-100 100v200l200 200V200zm500 100V0l-200 200v200zM2000 1000l-144-144 144-56zm-200-600l-400 400 200 200V800l400-400zM1200 800v200h-200zm100-300l-300 300h200l200-200zm-200-400L1200 0h-200v200l200 200h200z'/%3E%3Cpath fill='%23f6f6f6' d='M1600 0h-200l200 200v400l200-200V200h-200L1800 0zM2000 600V400l-200 200v200zM800 0H600l200 200 400 400 100-100zm400 0l-100 100 300 300V200zm200 800h-200l200 200h200zM1800 800l-200 200h200l200-200zm-800 0L600 400H400l400 400-200 200h200l200-200zM600 800L400 600V400L200 600 0 800v200h400l100-100zm0-800H200l200 200z'/%3E%3Cpath fill='%23fafafa' d='M800 200V0L400 400h200l100-100 300 300h200zM0 200V0h200zm600 400L400 400v200l200 200h200zM400 200L300 100 0 400l200 200V400zm100 700L200 600 100 700l300 300zm-300 100H0V800z'/%3E%3C/pattern%3E%3Crect fill='url(%23p)' width='100%25' height='100%25'/%3E%3C/svg%3E");
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+.navbar-brand {
+    font-style: italic;
+    font-weight: 600;
+}
+
+.prediction {
+    margin: 6rem 0;
+    text-align: center;
+}
+
+.prediction-title {
+    font-size: 34px;
+    text-decoration: underline #31E981;
+}
+
+.prediction-price {
+    @extend .mb-0;
+    font-size: 140px;
+    font-weight: 600;
+    color: #31E981;
+    text-shadow: 1px 2px 0 #28666E;
+    line-height: 1;
+}
+
+.prediction-price-round {
+    @extend .ml-3;
+    font-size: 95px;
+    color: #7D83FF;
+    white-space: nowrap;
+}
+
+.prediction-date {
+    margin-bottom: 5rem;
+    font-size: 50px;
+}
+
+.prediction-date-round {
+    @extend .ml-3;
+    font-size: 34px;
+    white-space: nowrap;
+}
+
+.prediction-generated-on {
+    @extend .mb-1;
+    font-size: 20px;
+    color: #888;
+    letter-spacing: .5px;
+}
+
+.prediction-learn-more {
+    font-size: 16px;
+}
+
+// large scale
+@media (max-width: 1240px) {
+    .prediction {
+        margin: 5rem 0;
+    }
+
+    .prediction-title {
+        font-size: 24px;
+    }
+
+    .prediction-price {
+        margin-bottom: 1rem !important;
+        font-size: 94px;
+    }
+
+    .prediction-price-round {
+        font-size: 64px;
+    }
+
+    .prediction-date {
+        margin-bottom: 4rem;
+        font-size: 32px;
+    }
+
+    .prediction-date-round {
+        font-size: 24px;
+    }
+}
+
+// medium scale
+@media (max-width: 840px) {
+    .prediction {
+        margin: 4rem 0;
+    }
+
+    .prediction-title {
+        font-size: 20px;
+    }
+
+    .prediction-price {
+        font-size: 80px;
+    }
+
+    .prediction-price-round {
+        font-size: 52px;
+    }
+
+    .prediction-date {
+        margin-bottom: 3rem;
+        font-size: 26px;
+    }
+
+    .prediction-date-round {
+        font-size: 22px;
+    }
+}
+
+// small scale
+@media (max-width: 520px) {
+    .prediction {
+        margin: 3rem 0;
+    }
+
+    .prediction-title {
+        font-size: 16px;
+    }
+
+    .prediction-price {
+        font-size: 68px;
+    }
+
+    .prediction-price-round {
+        margin-left: 0.5rem !important;
+        font-size: 48px;
+    }
+
+    .prediction-date {
+        margin-bottom: 2rem;
+        font-size: 22px;
+    }
+
+    .prediction-date-round {
+        margin-left: 0.5rem !important;
+        font-size: 18px;
+    }
+
+    .prediction-generated-on {
+        font-size: 16px;
+    }
+
+    .prediction-learn-more {
+        font-size: 14px;
+    }
+}
