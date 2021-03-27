@@ -413,7 +413,7 @@ def predict(file: str, force_cache_update: bool = False) -> None:
 
     current_price = df_predict.tail(1)['Price'].values[0]
     current_date = df_predict.tail(1)['Date'].values[0]
-    current_timestamp = int((current_date.astype('uint64') / 1e6).astype('uint32'))
+    current_timestamp = int(current_date.astype('uint64') / 1e9)
 
     result = {
         'current_price': current_price,
