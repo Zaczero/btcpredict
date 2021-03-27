@@ -23,7 +23,6 @@ $prediction_generated_one = date(DATE_FORMAT, $json['current_date']);
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link href="/css/style.css" rel="stylesheet">
         
         <link rel="shortcut icon" href="/favicon.ico">
         <link rel="icon" sizes="16x16 32x32 64x64" href="/favicon.ico">
@@ -48,11 +47,13 @@ $prediction_generated_one = date(DATE_FORMAT, $json['current_date']);
 
         <title>BTC Predict - Current bull run price and date prediction</title>
         <meta name="description" content="Bitcoin bull run prediction project which aims to evaluate current bull run's top price alongside the exact date." />
+
+        <link rel="preload" href="/css/style.css" as="style">
+        <link rel="preload" href="/font/Rubik-VariableFont_wght.ttf" as="font">
     </head>
     <body>
         <nav class="navbar navbar-expand-lg navbar-light">
             <a class="navbar-brand" href="/">BTCPredict</a>
-
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item active">
                     <a class="nav-link" href="https://github.com/Zaczero/btcpredict" target="_blank"><img class="mr-1" src="/img/github-icon.svg" height="16">View Source</a>
@@ -69,5 +70,7 @@ $prediction_generated_one = date(DATE_FORMAT, $json['current_date']);
             <p class="prediction-learn-more"><a href="https://github.com/Zaczero/btcpredict" target="_blank">Click here to learn more</a> 😎</p>
         </div>
         </div>
+
+        <link rel="stylesheet" href="/css/style.css">
     </body>
 </html>
