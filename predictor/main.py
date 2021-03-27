@@ -340,7 +340,6 @@ def predict(file: str, force_cache_update: bool = False) -> None:
     df_predict = df.dropna(subset=x_cols)
     df_predict = df_predict.loc[df[y_date_col].isna()]
 
-    # TODO: visualisations
     # sns.histplot(df_train, x=y_price_col, bins=50)
     # plt.show()
 
