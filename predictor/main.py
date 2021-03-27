@@ -18,6 +18,8 @@ from sklearn.svm import LinearSVR
 from tpot.builtins import StackingEstimator
 from tpot.export_utils import set_param_recursive
 
+PROJECT_DIR = os.path.dirname(os.path.realpath(__file__))
+
 
 def fetch_price_data() -> pd.DataFrame:
     r = requests.get('https://api.blockchair.com/bitcoin/blocks', {
@@ -318,7 +320,7 @@ def drop_repeated_bins(df: pd.DataFrame, col: str, bins: list, max_repeat: int) 
 
 def predict(file: str, force_cache_update: bool = False) -> None:
     random.seed(42)
-    df = init_dataframe('cache/dataframe.csv', force_cache_update)
+    df = init_dataframe(f'{PROJECT_DIR}/cache/dataframe.csv', force_cache_update)
 
     x_cols = [
         # 'PriceIncreaseCycle', 'PriceIncreaseCycleLog',
