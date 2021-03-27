@@ -65,7 +65,7 @@ $prediction_generated_one = date(DATE_FORMAT, $json['current_date']);
             <h1 class="prediction-price">$<?=$prediction_price?><wbr><span class="prediction-price-round">±$<?=$prediction_price_round?></span></h1>
             <h2 class="prediction-date"><nobr><?=$prediction_date?></nobr><wbr><span class="prediction-date-round">±<?=$prediction_date_round?> day(s)</span></h2>
             <p class="prediction-generated-on">This prediction was made on <nobr><?=$prediction_generated_one?></nobr></p>
-            <p class="prediction-learn-more"><a href="#">Click here to learn more</a> 😎</p>
+            <p class="prediction-learn-more"><a href="https://github.com/Zaczero/btcpredict" target="_blank">Click here to learn more</a> 😎</p>
         </div>
         </div>
     </body>
