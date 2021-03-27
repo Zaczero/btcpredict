@@ -1,2 +1,4 @@
 User-Agent: *
 Disallow:
+
+Sitemap: https://btcpredict.monicz.pl/sitemap.xml
