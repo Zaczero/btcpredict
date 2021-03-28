@@ -63,7 +63,7 @@ $prediction_generated_one = date(DATE_FORMAT, $json['current_date']);
 
         <div class="container-fluid">
         <div class="prediction">
-            <p class="prediction-title">The top of the current BTC bull run will happen on:</p>
+            <p class="prediction-title">The top of the current BTC bull run is:</p>
             <h1 class="prediction-price">$<?=$prediction_price?><wbr><span class="prediction-price-round">±$<?=$prediction_price_round?></span></h1>
             <h2 class="prediction-date"><nobr><?=$prediction_date?></nobr><wbr><span class="prediction-date-round">±<?=$prediction_date_round?> day(s)</span></h2>
             <p class="prediction-generated-on">This prediction was made on <nobr><?=$prediction_generated_one?></nobr></p>

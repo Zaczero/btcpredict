@@ -1,6 +1,6 @@
 # BTC Predict
 
-This is a Bitcoin bull run prediction project which aims to evaluate current bull run's top price alongside the exact date. The project is based of 2 individual ML models trained on the Bitcoin's ~8-years long historical data.
+This is a Bitcoin bull run prediction project which aims to evaluate current bull run's top price alongside the exact date. The project is based of 2 individual ML models trained on the Bitcoin historical pricing and block halving data.
 
 Check out this LIVE demo website: [btcpredict.monicz.pl](https://btcpredict.monicz.pl/)
 
