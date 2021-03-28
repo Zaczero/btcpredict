@@ -45,11 +45,13 @@
 
 @font-face {
     font-family: 'Rubik';
-    src: url('/font/Rubik-VariableFont_wght.ttf');
+    font-display: swap;
+    src: local('Rubik'), url('/font/Rubik-VariableFont_wght.ttf') format('truetype');
+    unicode-range: U+000-5FF;
 }
 
 html, body {
-    font-family: 'Rubik';
+    font-family: 'Rubik', sans-serif;
     min-height: 100vh;
 
     background-color: #ffffff;
