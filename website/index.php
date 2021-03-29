@@ -59,7 +59,7 @@ $prediction_generated_one = date(DATE_FORMAT, $json['current_date']);
             <a class="navbar-brand" href="/">BTCPredict</a>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="https://github.com/Zaczero/btcpredict" target="_blank"><img class="mr-1" src="/img/github-icon.svg" height="16">View Source</a>
+                    <a class="nav-link" href="https://github.com/Zaczero/btcpredict" target="_blank"><img class="mr-1" src="/img/github-icon.svg" width="16" height="16">View Source</a>
                 </li>
             </ul>
         </nav>
