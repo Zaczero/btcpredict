@@ -1,8 +1,8 @@
 # BTC Predict
 
-This is a Bitcoin bull run prediction project which aims to evaluate current bull run's top price alongside the exact date. The project is based of 2 individual ML models trained on the Bitcoin historical pricing and block halving data.
+This is a Bitcoin bull run prediction project which aims to evaluate current bull run's peak price alongside the exact date. The project consists of two individual machine-learning models trained on the Bitcoin's historical pricing and block halving data.
 
-Check out this LIVE demo website: [btcpredict.monicz.pl](https://btcpredict.monicz.pl/)
+Check out this awesome LIVE demo website: [btcpredict.monicz.pl](https://btcpredict.monicz.pl/)
 
 ## Usage
 
@@ -16,8 +16,8 @@ Check out this LIVE demo website: [btcpredict.monicz.pl](https://btcpredict.moni
 
 `$ py main.py --file <filename> [--force_cache_update]`
 
-* Create `cache` directory and ensure it is writtable
-* Force cache update at least once a day
+* Create a `cache` directory and ensure it is writtable
+* Force the cache update at least once a day
 
 ## Data transformation
 
@@ -30,7 +30,7 @@ The current prediction models are using the following data transformation method
 | Golden 51%-49% Ratio | [Visit page](https://www.tradingview.com/chart/BTCUSD/QBeNL8jt-BITCOIN-The-Golden-51-49-Ratio-600-days-of-Bull-Market-left/) |
 | The Puell Multiple | [Visit page](https://www.lookintobitcoin.com/charts/puell-multiple/) |
 
-*Inspired by the [CBBI](https://www.youtube.com/watch?v=rbkLLq5lVTA)*
+*Inspired by the [CBBI](https://www.youtube.com/watch?v=ZFQG59ZMSU0).*
 
 ## Footer
 
