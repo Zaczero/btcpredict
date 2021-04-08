@@ -47,11 +47,15 @@ You can send me an email afterwards to get listed in the supporters section *(no
 
 #### Bitcoin
 
-`bc1qvhdxpwzcvfhyzlf5jd3xvm48tm5wm6d0xaq55z`
+`bc1ql3gx9swg5zsn8ax8w34jw85juc5nqtprcdxrje`
 
 #### Bitcoin Cash
 
-`qpclmw8ulcdqd2gd66ryepshn9dq8278tvmkpu6df6`
+`qrvqsfz2vj6p0zdpg7w7zfah7qag2ygpju7yqh05hu`
+
+#### Litecoin
+
+`ltc1qpjz5rhaas0lxf90re0u65sy5jujxhtuqwwerkd`
 
 #### Monero
 
