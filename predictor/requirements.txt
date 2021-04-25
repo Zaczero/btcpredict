@@ -1,7 +1,9 @@
 numpy==1.19.2
+matplotlib==3.3.2
 pandas==1.1.3
 requests==2.24.0
+seaborn==0.11.0
 fire==0.4.0
 scikit_learn==0.24.1
 tpot==0.11.7
-xgboost==1.3.3
+xgboost==1.4.1

@@ -3,20 +3,27 @@ import os
 import random
 from collections import deque
 from copy import copy
+from typing import Tuple
 import fire
 import numpy as np
 import pandas as pd
 import requests
+from sklearn.decomposition import PCA
 from sklearn.ensemble import GradientBoostingRegressor
-from sklearn.feature_selection import SelectPercentile, f_regression
-from sklearn.kernel_approximation import Nystroem
-from sklearn.linear_model import LassoLarsCV
-from sklearn.pipeline import make_pipeline, make_union
-from sklearn.preprocessing import FunctionTransformer
+from sklearn.feature_selection import SelectPercentile, f_regression, SelectFwe, VarianceThreshold
+from sklearn.kernel_approximation import Nystroem, RBFSampler
+from sklearn.linear_model import LassoLarsCV, RidgeCV, ElasticNetCV
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn.pipeline import make_pipeline, make_union, Pipeline
+from sklearn.preprocessing import FunctionTransformer, RobustScaler, MinMaxScaler, Binarizer, StandardScaler
 from sklearn.preprocessing import MaxAbsScaler, Normalizer, PolynomialFeatures
 from sklearn.svm import LinearSVR
-from tpot.builtins import StackingEstimator
+from sklearn.tree import DecisionTreeRegressor
+from tpot import TPOTRegressor
+from tpot.builtins import StackingEstimator, ZeroCount
 from tpot.export_utils import set_param_recursive
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 PROJECT_DIR = os.path.dirname(os.path.realpath(__file__))
 
@@ -153,7 +160,7 @@ def fetch_block_data(df: pd.DataFrame) -> pd.DataFrame:
         current_cycle += 1
         current_issuance /= 2
 
-    df['CyclePow'] = np.power(4, df['Cycle'])
+    df['CyclePow'] = np.power(2, df['Cycle'])
     df['CoinIssuanceUSD'] = df.apply(lambda row: row['Price'] * row['CoinIssuance'], axis=1)
     df['CoinIssuanceUSDLog'] = np.log(df['CoinIssuanceUSD'])
     df['MarketCapUSD'] = df.apply(lambda row: row['Price'] * row['MarketCap'], axis=1)
@@ -244,6 +251,8 @@ def mark_2yma(df: pd.DataFrame) -> pd.DataFrame:
     df['2YMA'] = df['Price'].rolling(365 * 2).mean()
     df['2YMAx5'] = df['2YMA'] * 5
     df['2YMAPercentage'] = df.apply(lambda row: (row['Price'] - row['2YMA']) / (row['2YMAx5'] - row['2YMA']), axis=1)
+
+    df['2YMAPercentageCycle'] = df['2YMAPercentage'] * df['CyclePow']
     return df
 
 
@@ -257,6 +266,8 @@ def mark_pi_cycle(df: pd.DataFrame) -> pd.DataFrame:
     df['350MAx2Log'] = np.log(df['350MAx2'])
     df['PiLogDifference'] = np.abs(df['111MALog'] - df['350MAx2Log'])
     df['PiLogDifferenceLog'] = np.log(df['PiLogDifference'] + 1)
+
+    df['PiLogDifferenceCycle'] = df['PiLogDifferenceLog'] * df['CyclePow']
     return df
 
 
@@ -271,6 +282,8 @@ def mark_golden_ratio(df: pd.DataFrame) -> pd.DataFrame:
 def mark_puell_multiple(df: pd.DataFrame) -> pd.DataFrame:
     df['365MA-CoinIssuanceUSD'] = df['CoinIssuanceUSD'].rolling(365).mean()
     df['PuellMultiple'] = df['CoinIssuanceUSD'] / df['365MA-CoinIssuanceUSD']
+
+    df['PuellMultipleCycle'] = df['PuellMultiple'] * df['CyclePow']
     return df
 
 
@@ -318,100 +331,89 @@ def drop_repeated_bins(df: pd.DataFrame, col: str, bins: list, max_repeat: int) 
     return df.iloc[result_indexes]
 
 
+def get_date_pipeline() -> Tuple[float, Pipeline]:
+    mean_error = np.sqrt(0.03735920619021114)
+    pipeline = make_pipeline(
+        SelectPercentile(score_func=f_regression, percentile=20),
+        RBFSampler(gamma=0.75),
+        LassoLarsCV(normalize=True)
+    )
+
+    set_param_recursive(pipeline.steps, 'random_state', 45)
+    return mean_error, pipeline
+
+
+def get_price_pipeline() -> Tuple[float, Pipeline]:
+    mean_error = np.sqrt(2.6124858264243187)
+    pipeline = make_pipeline(
+        StackingEstimator(estimator=RidgeCV()),
+        MinMaxScaler(),
+        StackingEstimator(estimator=LinearSVR(C=0.001, dual=False, epsilon=0.1, loss="squared_epsilon_insensitive", tol=0.1)),
+        SelectPercentile(score_func=f_regression, percentile=96),
+        KNeighborsRegressor(n_neighbors=4, p=2, weights="distance")
+    )
+
+    set_param_recursive(pipeline.steps, 'random_state', 45)
+    return mean_error, pipeline
+
+
 def predict(file: str, force_cache_update: bool = False) -> None:
     random.seed(42)
     df = init_dataframe(f'{PROJECT_DIR}/cache/dataframe.csv', force_cache_update)
 
-    x_cols = [
-        # 'PriceIncreaseCycle', 'PriceIncreaseCycleLog',
-        '2YMAPercentage',
-        'PiLogDifference',
+    date_mean_error, date_pipeline = get_date_pipeline()
+    price_mean_error, price_pipeline = get_price_pipeline()
+
+    # select only pre-top rows (inclusive)
+    df = df[(df['DaysSinceIsBottom'] < df['DaysSinceIsTop']) | (df['DaysSinceIsTop'] == 0)]
+    df_train = df.dropna()
+
+    x_date_cols = [
+        '2YMAPercentageCycle',
+        'PiLogDifferenceCycle',
         'GoldenRatioAbs',
-        'PuellMultiple',
-        # 'SFDifference'
+        'PuellMultipleCycle',
     ]
     y_date_col = 'TopDateBasedPercentage'
-    y_price_col = 'TopPriceBasedPercentage'
-
-    # Select only pre-top rows (inclusive)
-    df = df[(df['DaysSinceIsBottom'] < df['DaysSinceIsTop']) | (df['DaysSinceIsTop'] == 0)]
-
-    df_train = df.dropna()
-    df_predict = df.dropna(subset=x_cols)
-    df_predict = df_predict.loc[df[y_date_col].isna()]
-
-    # sns.histplot(df_train, x=y_price_col, bins=50)
-    # plt.show()
-
-    df_train_price = drop_repeated_bins(df_train, y_price_col, np.arange(0, 100.1, 2.01), 10)
+    df_date_predict = df.dropna(subset=x_date_cols).loc[df[y_date_col].isna()]
 
     # tpot = TPOTRegressor(
-    #     generations=500,
+    #     generations=1000,
     #     population_size=100,
-    #     n_jobs=-1,
-    #     random_state=43,
-    #     periodic_checkpoint_folder='cp_price',
+    #     n_jobs=15,
+    #     random_state=45,
+    #     config_dict='TPOT light',
+    #     memory='auto',
+    #     periodic_checkpoint_folder='cp_date',
     #     verbosity=2,
     # )
     #
-    # tpot.fit(df_train_price[x_cols], df_train_price[y_price_col])
+    # tpot.fit(df_train[x_date_cols], df_train[y_date_col])
     # exit(0)
 
-    price_mean_error = np.sqrt(7.4994000810773445)
-    price_pipeline = make_pipeline(
-        make_union(
-            make_pipeline(
-                make_union(
-                    FunctionTransformer(copy),
-                    make_pipeline(
-                        make_union(
-                            FunctionTransformer(copy),
-                            FunctionTransformer(copy)
-                        ),
-                        StackingEstimator(estimator=LinearSVR(C=0.5, dual=False, epsilon=0.01, loss="squared_epsilon_insensitive", tol=0.1)),
-                        MaxAbsScaler(),
-                        Normalizer(norm="max")
-                    )
-                ),
-                Nystroem(gamma=0.15000000000000002, kernel="additive_chi2", n_components=10)
-            ),
-            Nystroem(gamma=0.30000000000000004, kernel="poly", n_components=9)
-        ),
-        LinearSVR(C=5.0, dual=True, epsilon=0.01, loss="epsilon_insensitive", tol=0.01)
-    )
-
-    date_mean_error = np.sqrt(0.03471098570562975)
-    date_pipeline = make_pipeline(
-        SelectPercentile(score_func=f_regression, percentile=16),
-        PolynomialFeatures(degree=2, include_bias=False, interaction_only=False),
-        Nystroem(gamma=0.8500000000000001, kernel="sigmoid", n_components=10),
-        StackingEstimator(estimator=GradientBoostingRegressor(alpha=0.75, learning_rate=0.001, loss="huber", max_depth=5, max_features=0.2, min_samples_leaf=10, min_samples_split=11, n_estimators=100,
-                                                              subsample=0.6500000000000001)),
-        LassoLarsCV(normalize=True)
-    )
-
-    set_param_recursive(price_pipeline.steps, 'random_state', 43)
-    set_param_recursive(date_pipeline.steps, 'random_state', 42)
-
-    price_pipeline.fit(df_train[x_cols], df_train[y_price_col])
-    date_pipeline.fit(df_train[x_cols], df_train[y_date_col])
-
-    price_predict = price_pipeline.predict(df_predict[x_cols])
-    price_predict_dev = price_predict - price_mean_error
-    price_predict_value = (df_predict['Price'] - df_predict['BottomPrice']) / (price_predict / 100)
-    price_predict_value_dev = np.abs(price_predict_value - (df_predict['Price'] - df_predict['BottomPrice']) / (price_predict_dev / 100))
-
-    date_predict = date_pipeline.predict(df_predict[x_cols])
+    date_pipeline.fit(df_train[x_date_cols], df_train[y_date_col])
+    date_predict = date_pipeline.predict(df_date_predict[x_date_cols])
     date_predict_dev = date_predict - date_mean_error
-    date_predict_value = df_predict['DaysSinceIsBottom'] / (date_predict / 100) - df_predict['DaysSinceIsBottom']
-    date_predict_value_dev = np.abs(date_predict_value - (df_predict['DaysSinceIsBottom'] / (date_predict_dev / 100) - df_predict['DaysSinceIsBottom']))
+    date_predict_value = df_date_predict['DaysSinceIsBottom'] / (date_predict / 100) - df_date_predict['DaysSinceIsBottom']
+    date_predict_value_dev = np.abs(date_predict_value - (df_date_predict['DaysSinceIsBottom'] / (date_predict_dev / 100) - df_date_predict['DaysSinceIsBottom']))
 
     date_predict_window_half_size = 5
     date_predict_value_mean = date_predict_value.tail(date_predict_window_half_size * 2 + 1).mean() - date_predict_window_half_size
     date_predict_value_dev_mean = date_predict_value_dev.tail(date_predict_window_half_size * 2 + 1).mean()
 
-    current_price = df_predict.tail(1)['Price'].values[0]
-    current_date = df_predict.tail(1)['Date'].values[0]
+    x_price_cols = x_date_cols + [y_date_col]
+    y_price_col = 'TopPriceBasedPercentage'
+    df_price_predict = df.dropna(subset=x_date_cols).loc[df[y_date_col].isna()]
+    df_price_predict.loc[df[y_date_col].isna(), y_date_col] = date_predict
+
+    price_pipeline.fit(df_train[x_price_cols], df_train[y_price_col])
+    price_predict = price_pipeline.predict(df_price_predict[x_price_cols])
+    price_predict_dev = price_predict - price_mean_error
+    price_predict_value = (df_price_predict['Price'] - df_price_predict['BottomPrice']) / (price_predict / 100)
+    price_predict_value_dev = np.abs(price_predict_value - (df_price_predict['Price'] - df_price_predict['BottomPrice']) / (price_predict_dev / 100))
+
+    current_price = df.tail(1)['Price'].values[0]
+    current_date = df.tail(1)['Date'].values[0]
     current_timestamp = int(current_date.astype('uint64') / 1e9)
 
     result = {
