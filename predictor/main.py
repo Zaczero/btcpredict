@@ -58,7 +58,7 @@ def fetch_price_data() -> pd.DataFrame:
 
 def mark_top_and_bottom(df: pd.DataFrame) -> pd.DataFrame:
     then_forward_window_size = 365 * 2
-    ignore_past_n_days = 90
+    ignore_past_n_days = 365
 
     df['IsTop'] = 0
     df['IsBottom'] = 0
