@@ -113,6 +113,12 @@ html, body {
     font-size: 16px;
 }
 
+.announcement {
+    p {
+        color: black;
+    }
+}
+
 // large scale
 @media (max-width: 1240px) {
     .prediction {

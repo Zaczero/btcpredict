@@ -72,6 +72,23 @@ $prediction_generated_one = date(DATE_FORMAT, $json['current_date']);
             <p class="prediction-generated-on">This prediction was made on <nobr><?=$prediction_generated_one?></nobr></p>
             <p class="prediction-learn-more"><a href="https://github.com/Zaczero/btcpredict" target="_blank">Click here to learn more</a> 😎</p>
         </div>
+
+        <div class="announcement mb-5">
+            <div class="alert alert-primary col-lg-8 offset-lg-2 col-xl-6 offset-xl-3">
+                <h5 class="alert-heading"><b>Notice:</b> Some people are getting worried that the predicted date is too early.</h5>
+
+                <p>
+                    The current date model relies heavily on The Golden 51%-49% Ratio metric which may or may not be correct.
+                    If it happens so that the bull run peak does not occur on the predicted date, a new model will be engineered with exclusion to faulty metrics.
+                </p>
+
+                <hr>
+
+                <p class="mb-0">
+                    For extra bull run peak reassurance I recommend checking the CBBI score (my other project): <a href="https://cbbi.info" target="_blank" rel="noreferrer">https://cbbi.info</a>
+                </p>
+            </div>
+        </div>
         </div>
 
         <link rel="stylesheet" href="/css/style.css" type="text/css">
