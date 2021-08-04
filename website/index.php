@@ -45,7 +45,7 @@ $prediction_generated_one = date(DATE_FORMAT, $json['current_date']);
         <meta name="msapplication-TileImage" content="/favicon-144.png">
         <meta name="msapplication-config" content="/browserconfig.xml">
 
-        <title>BTC Predict - Current bull run price and date prediction</title>
+        <title>BTC Predict - Current Bitcoin bull run price and date prediction</title>
         <meta name="description" content="Bitcoin bull run prediction project which aims to evaluate current bull run's top price alongside the exact date." />
 
         <link rel="preload" href="/css/style.css" as="style" type="text/css">
