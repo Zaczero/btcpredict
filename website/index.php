@@ -67,25 +67,30 @@ $prediction_generated_one = date(DATE_FORMAT, $json['current_date']);
         <div class="container-fluid">
         <div class="prediction">
             <p class="prediction-title">The top of the current BTC bull run is:</p>
-            <h1 class="prediction-price">$<?=$prediction_price?><wbr><span class="prediction-price-round">±$<?=$prediction_price_round?></span></h1>
-            <h2 class="prediction-date"><nobr><?=$prediction_date?></nobr><wbr><span class="prediction-date-round">±<?=$prediction_date_round?> day(s)</span></h2>
+            <h1 class="prediction-price mb-5">$<?=$prediction_price?><wbr><span class="prediction-price-round">±$<?=$prediction_price_round?></span></h1>
+            <!-- <h2 class="prediction-date"><nobr><?=$prediction_date?></nobr><wbr><span class="prediction-date-round">±<?=$prediction_date_round?> day(s)</span></h2> -->
             <p class="prediction-generated-on">This prediction was made on <nobr><?=$prediction_generated_one?></nobr></p>
             <p class="prediction-learn-more"><a href="https://github.com/Zaczero/btcpredict" target="_blank">Click here to learn more</a> 😎</p>
         </div>
 
         <div class="announcement mb-5">
             <div class="alert alert-primary col-lg-8 offset-lg-2 col-xl-6 offset-xl-3">
-                <h5 class="alert-heading"><b>Notice:</b> Some people are getting worried that the predicted date is too early.</h5>
+                <h5 class="alert-heading">
+                    <b>Notice:</b> The website updates have been disabled due to model inaccuracies.
+                </h5>
 
                 <p>
-                    The current date model relies heavily on The Golden 51%-49% Ratio metric which may or may not be correct.
-                    If it happens so that the bull run peak does not occur on the predicted date, a new model will be engineered with exclusion to faulty metrics.
+                    The current date model relies heavily on The Golden 51%-49% Ratio metric, which has been incorrect.
+                    I am currently engineering a new prediction system that will be less single-metric dependant
+                    and will include organic sources like cryptocurrency news.
+                    I do it as a part of a school project, so the final deadline is around February 2022.
                 </p>
 
                 <hr>
 
                 <p class="mb-0">
-                    For extra bull run peak reassurance I recommend checking the CBBI score (my other project): <a href="https://cbbi.info" target="_blank" rel="noreferrer">https://cbbi.info</a>
+                    Meanwhile, I recommend using the CBBI score for the bull run peak detection (my other project):
+                    <a href="https://cbbi.info" target="_blank" rel="noreferrer">https://cbbi.info</a>
                 </p>
             </div>
         </div>
